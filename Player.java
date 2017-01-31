@@ -7,7 +7,23 @@ public class Player {
 		this.identity = identity;
 	}
 	
-	public ArrayList<Action> possibleActions() {
+	public ArrayList<Action> possibleActions(State s) {
+		return null;
+	}
+	
+	public int getId() {
+		return identity;
+	}
+	
+	public Action chooseAction(ArrayList<Action> listOfActions, State s) {
+		if(identity == 1) {
+			return null;
+		} else {
+			return minimax(listOfActions,s);
+		}
+	}
+
+	public Action minimax(ArrayList<Action> listOfActions, State s) {
 		return null;
 	}
 }

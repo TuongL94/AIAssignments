@@ -29,7 +29,7 @@ public class State {
 	/**
 	 * Updates the current state
 	 */
-	public void updateState() {
+	public void updateState(Action a, int playerId) {
 		
 	}
 	
