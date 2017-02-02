@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class Game {
 	private State currentState;
 	private Player human;
@@ -10,11 +9,11 @@ public class Game {
 	/**
 	 * Constructor
 	 */
-	public Game() {
+	public Game(Player human, Player bot) {
 		currentState = new State();
-		human = new Player(1);
-		bot = new Player(2);
-		currentPlayer = human;
+		this.human = human;
+		this.bot = bot;
+		currentPlayer = this.human;
 		
 	}
 	
