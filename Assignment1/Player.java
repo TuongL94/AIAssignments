@@ -8,7 +8,7 @@ public class Player {
 	}
 	
 	public ArrayList<Action> possibleActions(State s) {
-		return null;
+		return s.possibleActions(identity);
 	}
 	
 	public int getId() {
