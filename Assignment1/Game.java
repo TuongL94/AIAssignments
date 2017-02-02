@@ -18,7 +18,7 @@ public class Game {
 		
 	}
 	
-	public void updateGame(Action a) {
+	public void updateGame(Point a) {
 		currentState.updateState(a,currentPlayer.getId());
 		if(currentPlayer.getId() == 1) {
 			currentPlayer = bot;
@@ -38,7 +38,4 @@ public class Game {
 			return false;
 		}
 	}
-	
-
-	
 }

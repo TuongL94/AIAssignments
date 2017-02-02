@@ -1,20 +1,21 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class State {
 	private int [][] stateMatrix;
 	private int sumOfBlack;
 	private int sumOfWhite;
+	private int lastPlacedRow;
+	private int lastPlacedCol;
 	
 	/**
 	 * Constructor
 	 */
 	public State() {
 		stateMatrix = new int[8][8];
-		stateMatrix[3][3] = -1;
 		stateMatrix[4][4] = -1;
-		stateMatrix[3][4] = 1;
-		stateMatrix[4][3] = 1;
-		//stateMatrix[4][2] = -1;
+		stateMatrix[5][5] = -1;
+		stateMatrix[4][5] = 1;
+		stateMatrix[5][4] = 1;
 		sumOfBlack = 2;
 		sumOfWhite = -2;
 	}
@@ -32,8 +33,12 @@ public class State {
 	/**
 	 * Updates the current state
 	 */
-	public void updateState(Action a, int playerId) {
-		
+	public void updateState(Point a, int playerId) {
+		if(playerId == 1) {
+			stateMatrix[a.getRow()][a.getCol()] = 1;
+		} else {
+			stateMatrix[a.getRow()][a.getCol()] = -1;
+		}
 	}
 	
 	/**
@@ -52,19 +57,12 @@ public class State {
 		return checkFull;
 	}
 	
-	public int getNbrOfBlack() {
-		return sumOfBlack;
-	}
-	
-	public int getNbrOfWhite() {
-		return sumOfWhite;
-	}
 	/**
 	 * Checks what actions are possible for player identity
 	 * @return a list of possible actions
 	 */
-	public ArrayList<Action> possibleActions(int identity) {
-		ArrayList<Action> actionList = new ArrayList<Action>();
+	public ArrayList<Point> possibleActions(int identity) {
+		ArrayList<Point> actionList = new ArrayList<Point>();
 		int opponent = -identity;
 		for(int i = 0; i <= 7; i++) {
 			for(int j = 0; j <= 7; j++){
@@ -73,7 +71,7 @@ public class State {
 					ArrayList<Point> neighbours = getEmptyNeighbours(target);
 					for(Point p : neighbours){
 						if(feasible(target,p,identity)){
-							Action a = new Action(p.getCol(),p.getRow());
+							Point a = new Point(p.getCol(),p.getRow());
 							actionList.add(a);
 						}
 					}
@@ -82,7 +80,7 @@ public class State {
 		}
 		return actionList;
 	}
-
+	
 	private boolean feasible(Point t, Point p, int identity) {
 		boolean b = false;
 		int dx = p.getRow()-t.getRow();
@@ -117,7 +115,7 @@ public class State {
 		}
 		return b;
 	}
-
+	
 	private ArrayList<Point> getEmptyNeighbours(Point t) {
 		ArrayList<Point> neighbours = new ArrayList<Point>();
 		int x = t.getRow();
@@ -134,6 +132,19 @@ public class State {
 	}
 
 
-
+	public int getNbrOfBlack() {
+		return sumOfBlack;
+	}
 	
+	public int getNbrOfWhite() {
+		return sumOfWhite;
+	}
+	
+	public int getLastPlacedRow() {
+		return lastPlacedRow;
+	}
+	
+	public int getLastPlacedCol() {
+		return lastPlacedCol;
+	}
 }
