@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class State {
-	private int[][] stateMatrix;
+	private int [][] stateMatrix;
 	private int sumOfBlack;
 	private int sumOfWhite;
 	private int lastPlacedRow;
@@ -12,13 +12,17 @@ public class State {
 	 */
 	public State() {
 		stateMatrix = new int[8][8];
-		stateMatrix[3][3] = -1;
 		stateMatrix[4][4] = -1;
-		stateMatrix[3][4] = 1;
-		stateMatrix[4][3] = 1;
-		//stateMatrix[4][2] = -1;
+		stateMatrix[5][5] = -1;
+		stateMatrix[4][5] = 1;
+		stateMatrix[5][4] = 1;
 		sumOfBlack = 2;
 		sumOfWhite = -2;
+	}
+	
+	public State(int[][] stateMatrix) {
+		this.stateMatrix = stateMatrix;
+		updateSum();
 	}
 	
 	/**
@@ -31,9 +35,6 @@ public class State {
 		return stateMatrix[row][col] == 0;
 	}
 	
-	public int[][] getMatrix(){
-		return stateMatrix;
-	}
 	
 	/**
 	 * Updates the current state
@@ -60,7 +61,6 @@ public class State {
 					for(Point p : wins){
 						stateMatrix[p.getRow()][p.getCol()] = playerId;
 					}
-					
 				}
 			}
 	}
@@ -154,7 +154,10 @@ public class State {
 		}
 		return neighbours;
 	}
-
+	
+	public int[][] getStateMatrix() {
+		return stateMatrix;
+	}
 
 	public int getNbrOfBlack() {
 		return sumOfBlack;
@@ -171,6 +174,7 @@ public class State {
 	public int getLastPlacedCol() {
 		return lastPlacedCol;
 	}
+	
 	private void updateSum(){
 		int black = 0;
 		int white = 0;
@@ -186,4 +190,5 @@ public class State {
 		sumOfBlack = black;
 		sumOfWhite = white;
 	}
+	
 }
