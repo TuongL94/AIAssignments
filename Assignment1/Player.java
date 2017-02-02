@@ -17,7 +17,7 @@ public class Player {
 	
 	public Point chooseAction(Node n, int depth) {
 		if(identity == 1) {
-			return null;
+			return humanResponse();
 		} else {
 			return minimax(n, depth, false, 0);
 		}
@@ -57,5 +57,18 @@ public class Player {
 			Point bestMove = new Point(bestValue,bestIndex);
 			return bestMove;
 		}
+	}
+	
+	private Point humanResponse(){
+		int row = 0;
+		int col = 0;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Your move: ");
+        while(sc.hasNextInt()){
+        	row = sc.nextInt();
+        	col = sc.nextInt();
+        }
+        Point p = new Point(row,col);
+        return p;
 	}
 }

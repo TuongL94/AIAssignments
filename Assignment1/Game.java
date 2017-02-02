@@ -37,4 +37,13 @@ public class Game {
 			return false;
 		}
 	}
+	
+	
+	public Player getCurrentPlayer(){
+		return currentPlayer;
+	}
+	
+	public State getGameState(){
+		return currentState;
+	}
 }

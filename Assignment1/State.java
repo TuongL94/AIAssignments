@@ -12,10 +12,10 @@ public class State {
 	 */
 	public State() {
 		stateMatrix = new int[8][8];
+		stateMatrix[3][3] = -1;
 		stateMatrix[4][4] = -1;
-		stateMatrix[5][5] = -1;
-		stateMatrix[4][5] = 1;
-		stateMatrix[5][4] = 1;
+		stateMatrix[3][4] = 1;
+		stateMatrix[4][3] = 1;
 		sumOfBlack = 2;
 		sumOfWhite = -2;
 	}
@@ -188,7 +188,7 @@ public class State {
 			}
 		}
 		sumOfBlack = black;
-		sumOfWhite = white;
+		sumOfWhite = -white;
 	}
 	
 }
