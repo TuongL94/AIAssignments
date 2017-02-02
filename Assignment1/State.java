@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class State {
-	private int [][] stateMatrix;
+	private int[][] stateMatrix;
 	private int sumOfBlack;
 	private int sumOfWhite;
 	private int lastPlacedRow;
@@ -12,10 +12,11 @@ public class State {
 	 */
 	public State() {
 		stateMatrix = new int[8][8];
+		stateMatrix[3][3] = -1;
 		stateMatrix[4][4] = -1;
-		stateMatrix[5][5] = -1;
-		stateMatrix[4][5] = 1;
-		stateMatrix[5][4] = 1;
+		stateMatrix[3][4] = 1;
+		stateMatrix[4][3] = 1;
+		//stateMatrix[4][2] = -1;
 		sumOfBlack = 2;
 		sumOfWhite = -2;
 	}
@@ -30,15 +31,38 @@ public class State {
 		return stateMatrix[row][col] == 0;
 	}
 	
+	public int[][] getMatrix(){
+		return stateMatrix;
+	}
+	
 	/**
 	 * Updates the current state
 	 */
 	public void updateState(Point a, int playerId) {
-		if(playerId == 1) {
-			stateMatrix[a.getRow()][a.getCol()] = 1;
-		} else {
-			stateMatrix[a.getRow()][a.getCol()] = -1;
-		}
+			int coord_x = a.getRow();
+			int coord_y = a.getCol();
+			stateMatrix[coord_x][coord_y] = playerId;
+			int opponent = -playerId;
+			for(int dir_x = -1; dir_x <= 1; dir_x++){
+				for(int dir_y = -1; dir_y <= 1; dir_y++){
+					int z = 1;
+					boolean b = true;
+					ArrayList<Point> wins = new ArrayList<Point>();
+					while((0 <= coord_x+z*dir_x) && (coord_x+z*dir_x <=7) && (0 <= coord_y+z*dir_y) && (coord_y+z*dir_y <=7) && b){
+						if(stateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == opponent){
+							Point p = new Point(coord_x+z*dir_x, coord_y+z*dir_y);
+							wins.add(p);
+							z++;
+						} else if((stateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == playerId) || (stateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == 0)){
+							b = false;
+						}
+					}
+					for(Point p : wins){
+						stateMatrix[p.getRow()][p.getCol()] = playerId;
+					}
+					
+				}
+			}
 	}
 	
 	/**
