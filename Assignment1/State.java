@@ -171,4 +171,19 @@ public class State {
 	public int getLastPlacedCol() {
 		return lastPlacedCol;
 	}
+	private void updateSum(){
+		int black = 0;
+		int white = 0;
+		for(int i = 0; i <= 7; i++){
+			for(int j = 0; j <= 7; j++){
+				if(stateMatrix[i][j] == 1){
+					black++;
+				} else if(stateMatrix[i][j] == -1){
+					white++;
+				}
+			}
+		}
+		sumOfBlack = black;
+		sumOfWhite = white;
+	}
 }
