@@ -40,56 +40,59 @@ public class State {
 	 * Updates the current state
 	 */
 	public void updateState(Point a, int playerId) {
-			int row = a.getRow();
-			int col = a.getCol();
-			stateMatrix[row][col] = playerId;
-			int opponent = -playerId;
-			for(int dir_row = -1; dir_row <= 1; dir_row++){
-				for(int dir_col = -1; dir_col <= 1; dir_col++){
-					int step = 1;
-					boolean foundOwn = false;
-					ArrayList<Point> myWins = new ArrayList<Point>();
-					while((0 <= row+step*dir_row) && (row+step*dir_row <=7) && (0 <= col+step*dir_col) && (col+step*dir_col <=7) && !foundOwn && !(dir_row == 0 && dir_col == 0)){
-						if(stateMatrix[row+step*dir_row][col+step*dir_col] == opponent){
-							Point p = new Point(row+step*dir_row, col+step*dir_row);
-							myWins.add(p);
-							step++;
-						} else if(stateMatrix[row+step*dir_row][col+step*dir_col] == playerId){
-							foundOwn = true;
-						} else if(stateMatrix[row+step*dir_row][col+step*dir_col] == 0){
-							myWins.clear();
-							break;
-						}
-					}
-					for(Point p : myWins){
-						stateMatrix[p.getRow()][p.getCol()] = playerId;
+		int row = a.getRow();
+		int col = a.getCol();
+		stateMatrix[row][col] = playerId;
+		int opponent = -playerId;
+		for(int dir_row = -1; dir_row <= 1; dir_row++){
+			for(int dir_col = -1; dir_col <= 1; dir_col++){
+				int step = 1;
+				boolean foundOwn = false;
+				ArrayList<Point> myWins = new ArrayList<Point>();
+				while((0 <= row+step*dir_row) && (row+step*dir_row <=7) && (0 <= col+step*dir_col) && (col+step*dir_col <=7) && !foundOwn && !(dir_row == 0 && dir_col == 0)){
+					if(stateMatrix[row+step*dir_row][col+step*dir_col] == opponent){
+						Point p = new Point(row+step*dir_row, col+step*dir_row);
+						myWins.add(p);
+						step++;
+					} else if(stateMatrix[row+step*dir_row][col+step*dir_col] == playerId){
+						foundOwn = true;
+					} else if(stateMatrix[row+step*dir_row][col+step*dir_col] == 0){
+						myWins.clear();
+						break;
 					}
 				}
+				for(Point p : myWins){
+					stateMatrix[p.getRow()][p.getCol()] = playerId;
+				}
 			}
-			updateSum();
-	}
+		}
+		updateSum();
+}
 	
 	public int[][] getUpdatedStateMatrix(Point a, int playerId) {
 		int[][] updatedStateMatrix = copyStateMatrix();
-		int coord_x = a.getRow();
-		int coord_y = a.getCol();
-		updatedStateMatrix[coord_x][coord_y] = playerId;
+		int row = a.getRow();
+		int col = a.getCol();
+		updatedStateMatrix[row][col] = playerId;
 		int opponent = -playerId;
-		for(int dir_x = -1; dir_x <= 1; dir_x++){
-			for(int dir_y = -1; dir_y <= 1; dir_y++){
-				int z = 1;
-				boolean b = true;
-				ArrayList<Point> wins = new ArrayList<Point>();
-				while((0 <= coord_x+z*dir_x) && (coord_x+z*dir_x <=7) && (0 <= coord_y+z*dir_y) && (coord_y+z*dir_y <=7) && b){
-					if(updatedStateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == opponent){
-						Point p = new Point(coord_x+z*dir_x, coord_y+z*dir_y);
-						wins.add(p);
-						z++;
-					} else if((updatedStateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == playerId) || (updatedStateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == 0)){
-						b = false;
+		for(int dir_row = -1; dir_row <= 1; dir_row++){
+			for(int dir_col = -1; dir_col <= 1; dir_col++){
+				int step = 1;
+				boolean foundOwn = false;
+				ArrayList<Point> myWins = new ArrayList<Point>();
+				while((0 <= row+step*dir_row) && (row+step*dir_row <=7) && (0 <= col+step*dir_col) && (col+step*dir_col <=7) && !foundOwn && !(dir_row == 0 && dir_col == 0)){
+					if(updatedStateMatrix[row+step*dir_row][col+step*dir_col] == opponent){
+						Point p = new Point(row+step*dir_row, col+step*dir_col);
+						myWins.add(p);
+						step++;
+					} else if(updatedStateMatrix[row+step*dir_row][col+step*dir_col] == playerId){
+						foundOwn = true;
+					} else if(updatedStateMatrix[row+step*dir_row][col+step*dir_col] == 0){
+						myWins.clear();
+						break;
 					}
 				}
-				for(Point p : wins){
+				for(Point p : myWins){
 					updatedStateMatrix[p.getRow()][p.getCol()] = playerId;
 				}
 			}

@@ -19,7 +19,10 @@ public class Player {
 		if(identity == 1) {
 			return humanResponse();
 		} else {
-			return miniMax(n, depth, false, 0);
+			Point p = miniMax(n, depth, false, 0);
+			State optimalState =  n.getChildren().get(p.getCol()).getNodeState();
+			Point optimalMove = new Point(optimalState.getLastPlacedRow(), optimalState.getLastPlacedCol());
+			return optimalMove;
 		}
 	}
 
