@@ -15,4 +15,12 @@ public class Point {
 	public int getCol() {
 		return col;
 	}
+	
+	public boolean equals(Point p){
+		if(row == p.getRow() && col == p.getCol()){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

@@ -128,7 +128,9 @@ public class State {
 					for(Point p : neighbours){
 						if(feasible(target,p,identity)){
 							Point a = new Point(p.getRow(),p.getCol());
-							actionList.add(a);
+							if(!actionList.contains(p)){
+								actionList.add(a);
+							}
 						}
 					}
 				}
