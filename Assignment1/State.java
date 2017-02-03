@@ -16,12 +16,16 @@ public class State {
 		stateMatrix[4][4] = -1;
 		stateMatrix[3][4] = 1;
 		stateMatrix[4][3] = 1;
+		lastPlacedRow = 4;
+		lastPlacedCol = 4;
 		sumOfBlack = 2;
 		sumOfWhite = -2;
 	}
 	
-	public State(int[][] stateMatrix) {
+	public State(int[][] stateMatrix, int lastPlacedRow, int lastPlacedCol) {
 		this.stateMatrix = stateMatrix;
+		this.lastPlacedRow = lastPlacedRow;
+		this.lastPlacedCol = lastPlacedCol;
 		updateSum();
 	}
 	
@@ -51,7 +55,7 @@ public class State {
 				ArrayList<Point> myWins = new ArrayList<Point>();
 				while((0 <= row+step*dir_row) && (row+step*dir_row <=7) && (0 <= col+step*dir_col) && (col+step*dir_col <=7) && !foundOwn && !(dir_row == 0 && dir_col == 0)){
 					if(stateMatrix[row+step*dir_row][col+step*dir_col] == opponent){
-						Point p = new Point(row+step*dir_row, col+step*dir_row);
+						Point p = new Point(row+step*dir_row, col+step*dir_col);
 						myWins.add(p);
 						step++;
 					} else if(stateMatrix[row+step*dir_row][col+step*dir_col] == playerId){
@@ -67,6 +71,8 @@ public class State {
 			}
 		}
 		updateSum();
+		lastPlacedRow = a.getRow();
+		lastPlacedCol = a.getCol();
 }
 	
 	public int[][] getUpdatedStateMatrix(Point a, int playerId) {

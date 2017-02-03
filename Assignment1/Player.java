@@ -35,7 +35,7 @@ public class Player {
 		if(maximizingPlayer) {
 			int bestValue = -10^6;
 			int bestIndex = 0;
-			for(int i = 0; i <= n.getChildren().size(); i++) {
+			for(int i = 0; i < n.getChildren().size(); i++) {
 				Point v = miniMax(n.getChildren().get(i), depth - 1, false, i);
 				int temp = Math.max(bestValue,v.getRow());
 				if(temp > bestValue) {
@@ -49,7 +49,7 @@ public class Player {
 		else {
 			int bestValue = 10^6;
 			int bestIndex = 0;
-			for(int i = 0; i <= n.getChildren().size(); i++) {
+			for(int i = 0; i < n.getChildren().size(); i++) {
 				Point v = miniMax(n.getChildren().get(i), depth - 1, true, i);
 				int temp = Math.min(bestValue,v.getRow());
 				if(temp < bestValue) {

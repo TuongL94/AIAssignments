@@ -5,7 +5,7 @@ public class OthelloGame {
 		Player human = new Player(1);
 		Player robot = new Player(-1);
 		Game othello = new Game(human, robot);
-		int depth = 2;
+		int depth = 7;
 		int[][] start = othello.getGameState().getStateMatrix();
 		for(int i = 0; i <=7; i++){
 			for(int j = 0; j <= 7; j++){
@@ -27,6 +27,7 @@ public class OthelloGame {
 			Point action = p.chooseAction(rootNode, depth);
 			if(p.getId() == robot.getId()){
 				System.out.println(action.getRow()+", "+action.getCol());
+				System.out.print("\n");
 			}
 			othello.updateGame(action);
 			int[][] currentMatrix = othello.getGameState().getStateMatrix();
@@ -42,9 +43,7 @@ public class OthelloGame {
 				}
 				System.out.print("\n");
 			}
-			depth--;
 		}
-		
 	}
 	
 	
@@ -54,7 +53,7 @@ public class OthelloGame {
 			return;
 		} else {
 			for(Point move : possibleMoves) {
-				State childState = new State(parent.getNodeState().getUpdatedStateMatrix(move, id));
+				State childState = new State(parent.getNodeState().getUpdatedStateMatrix(move, id), move.getRow(), move.getCol());
 				Node childNode = new Node(childState);
 				parent.addChildren(childNode);
 		}
