@@ -4,19 +4,36 @@ public class OthelloGame {
 	public static void main(String [] args) {
 		Player human = new Player(1);
 		Player robot = new Player(-1);
-		State currentState = new State();
 		Game othello = new Game(human, robot);
-		int depth = 1;
+		int depth = 2;
 		
 		while(!othello.isFinished()) {
-			Node rootNode = new Node(currentState);
+			Node rootNode = new Node(othello.getGameState());
 			Player p = othello.getCurrentPlayer();
-			rootNode.createChildren(depth,p.getId());
+			createChildren(depth,p.getId(), rootNode);
 			Point action = p.chooseAction(rootNode, depth);
 			if(p.getId() == robot.getId()){
 				System.out.println(action.getRow()+", "+action.getCol());
 			}
 			othello.updateGame(action);
+			depth--;
 		}
 	}
+	
+	
+	private static void createChildren(int depth, int id, Node parent) {
+		ArrayList<Point> possibleMoves = parent.getNodeState().possibleActions(id);
+		if(depth == 0) {
+			return;
+		} else {
+			for(Point move : possibleMoves) {
+				State childState = new State(parent.getNodeState().getUpdatedStateMatrix(move, id));
+				Node childNode = new Node(childState);
+				parent.addChildren(childNode);
+		}
+			for(Node n : parent.getChildren()) {
+				createChildren(depth - 1, -id, n);
+			}
+	 }
+   }
 }

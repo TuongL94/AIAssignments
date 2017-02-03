@@ -14,7 +14,6 @@ public class Game {
 		this.human = human;
 		this.bot = bot;
 		currentPlayer = this.human;
-		
 	}
 	
 	public void updateGame(Point a) {
@@ -37,7 +36,6 @@ public class Game {
 			return false;
 		}
 	}
-	
 	
 	public Player getCurrentPlayer(){
 		return currentPlayer;

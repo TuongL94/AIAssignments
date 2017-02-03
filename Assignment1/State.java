@@ -63,7 +63,36 @@ public class State {
 					}
 				}
 			}
+			updateSum();
 	}
+	
+	public int[][] getUpdatedStateMatrix(Point a, int playerId) {
+		int[][] updatedStateMatrix = copyStateMatrix();
+		int coord_x = a.getRow();
+		int coord_y = a.getCol();
+		updatedStateMatrix[coord_x][coord_y] = playerId;
+		int opponent = -playerId;
+		for(int dir_x = -1; dir_x <= 1; dir_x++){
+			for(int dir_y = -1; dir_y <= 1; dir_y++){
+				int z = 1;
+				boolean b = true;
+				ArrayList<Point> wins = new ArrayList<Point>();
+				while((0 <= coord_x+z*dir_x) && (coord_x+z*dir_x <=7) && (0 <= coord_y+z*dir_y) && (coord_y+z*dir_y <=7) && b){
+					if(updatedStateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == opponent){
+						Point p = new Point(coord_x+z*dir_x, coord_y+z*dir_y);
+						wins.add(p);
+						z++;
+					} else if((updatedStateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == playerId) || (updatedStateMatrix[coord_x+z*dir_x][coord_y+z*dir_y] == 0)){
+						b = false;
+					}
+				}
+				for(Point p : wins){
+					updatedStateMatrix[p.getRow()][p.getCol()] = playerId;
+				}
+			}
+		}
+		return updatedStateMatrix;
+}
 	
 	/**
 	 * Checks if the board is full
@@ -95,7 +124,7 @@ public class State {
 					ArrayList<Point> neighbours = getEmptyNeighbours(target);
 					for(Point p : neighbours){
 						if(feasible(target,p,identity)){
-							Point a = new Point(p.getCol(),p.getRow());
+							Point a = new Point(p.getRow(),p.getCol());
 							actionList.add(a);
 						}
 					}
@@ -135,7 +164,6 @@ public class State {
 				i = i - dx;
 				j = j - dy;
 			}
-			
 		}
 		return b;
 	}
@@ -189,6 +217,15 @@ public class State {
 		}
 		sumOfBlack = black;
 		sumOfWhite = -white;
+	}
+	
+	private int[][] copyStateMatrix() {
+		int[][] copyMatrix = new int[8][8];
+		for(int i = 0; i < stateMatrix.length; i++) {
+			for(int j = 0; j < stateMatrix[0].length; j++)
+			copyMatrix[i][j] = stateMatrix[i][j];
+		}
+		return copyMatrix;
 	}
 	
 }
