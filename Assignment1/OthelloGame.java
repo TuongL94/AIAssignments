@@ -6,7 +6,20 @@ public class OthelloGame {
 		Player robot = new Player(-1);
 		Game othello = new Game(human, robot);
 		int depth = 2;
-		
+		int[][] start = othello.getGameState().getStateMatrix();
+		for(int i = 0; i <=7; i++){
+			for(int j = 0; j <= 7; j++){
+				if(start[i][j] == -1) {
+					System.out.print("w"+"  ");
+				} else if(start[i][j] == 1){
+					System.out.print("b"+"  ");
+				} else {
+					System.out.print(start[i][j]+"  ");
+				}
+			}
+			System.out.print("\n");
+		}
+		System.out.print("\n");
 		while(!othello.isFinished()) {
 			Node rootNode = new Node(othello.getGameState());
 			Player p = othello.getCurrentPlayer();
@@ -16,8 +29,22 @@ public class OthelloGame {
 				System.out.println(action.getRow()+", "+action.getCol());
 			}
 			othello.updateGame(action);
+			int[][] currentMatrix = othello.getGameState().getStateMatrix();
+			for(int i = 0; i <=7; i++){
+				for(int j = 0; j <= 7; j++){
+					if(currentMatrix[i][j] == -1) {
+						System.out.print("w"+"  ");
+					} else if(currentMatrix[i][j] == 1){
+						System.out.print("b"+"  ");
+					} else {
+						System.out.print(currentMatrix[i][j]+"  ");
+					}
+				}
+				System.out.print("\n");
+			}
 			depth--;
 		}
+		
 	}
 	
 	
