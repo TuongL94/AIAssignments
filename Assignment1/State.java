@@ -65,6 +65,9 @@ public class State {
 						break;
 					}
 				}
+				if(!foundOwn){
+					myWins.clear();
+				}
 				for(Point p : myWins){
 					stateMatrix[p.getRow()][p.getCol()] = playerId;
 				}
