@@ -1,5 +1,5 @@
 
-public class Point {
+public class Point extends Object{
 	private int row;
 	private int col;
 	
@@ -15,9 +15,9 @@ public class Point {
 	public int getCol() {
 		return col;
 	}
-	
-	public boolean equals(Point p){
-		if(row == p.getRow() && col == p.getCol()){
+	@Override
+	public boolean equals(Object o){
+		if(this.row == ((Point) o).getRow() && this.col == ((Point) o).getCol()){
 			return true;
 		} else {
 			return false;

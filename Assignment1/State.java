@@ -158,7 +158,9 @@ public class State {
 		if(dx == 0){
 			int i = t.getCol()-dy;
 			while((i>=0) && (i<=7)) {
-				if(stateMatrix[t.getRow()][i] == identity){
+				if(stateMatrix[t.getRow()][i] == 0){
+					break;
+				} else if(stateMatrix[t.getRow()][i] == identity){
 					b = true;
 				}
 				i = i - dy;
@@ -166,7 +168,9 @@ public class State {
 		} else if(dy == 0) {
 			int i = t.getRow()-dx;
 			while((i>=0) && (i<=7)) {
-				if(stateMatrix[i][t.getCol()] == identity){
+				if(stateMatrix[i][t.getCol()] == 0){
+					break;
+				} else if(stateMatrix[i][t.getCol()] == identity){
 					b = true;
 				}
 				i = i - dx;
@@ -175,7 +179,9 @@ public class State {
 			int i = t.getRow()-dx;
 			int j = t.getCol()-dy;
 			while((i>=0) && (i<=7) && (j>=0) && (j<=7)) {
-				if(stateMatrix[i][j] == identity){
+				if(stateMatrix[i][j] == 0){
+					break;
+				} else if (stateMatrix[i][j] == identity){
 					b = true;
 				}
 				i = i - dx;
