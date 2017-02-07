@@ -16,8 +16,7 @@ public class Game {
 		currentPlayer = this.human;
 	}
 	
-	public void updateGame(Point a) {
-		currentState.updateState(a,currentPlayer.getId());
+	public void updateGame() {
 		if(currentPlayer.getId() == 1) {
 			currentPlayer = bot;
 		} else {
