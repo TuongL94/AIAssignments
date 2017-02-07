@@ -22,6 +22,12 @@ public class State {
 		sumOfWhite = -2;
 	}
 	
+	/**
+	 * Constructor
+	 * @param stateMatrix - matrix that represents the state (1 corresponds to black pieces and -1 to white pieces)
+	 * @param lastPlacedRow - the row index of the latest move made by a player
+	 * @param lastPlacedCol - the column index of the latest move made by a player
+	 */
 	public State(int[][] stateMatrix, int lastPlacedRow, int lastPlacedCol) {
 		this.stateMatrix = stateMatrix;
 		this.lastPlacedRow = lastPlacedRow;
@@ -76,8 +82,11 @@ public class State {
 		updateSum();
 		lastPlacedRow = a.getRow();
 		lastPlacedCol = a.getCol();
-}
+	}
 	
+	/**
+	 * Returns a copy of the updated state (the method does not update the state)
+	 */
 	public int[][] getUpdatedStateMatrix(Point a, int playerId) {
 		int[][] updatedStateMatrix = copyStateMatrix();
 		int row = a.getRow();
@@ -100,6 +109,9 @@ public class State {
 						myWins.clear();
 						break;
 					}
+				}
+				if(!foundOwn){
+					myWins.clear();
 				}
 				for(Point p : myWins){
 					updatedStateMatrix[p.getRow()][p.getCol()] = playerId;
@@ -191,6 +203,11 @@ public class State {
 		return b;
 	}
 	
+	/**
+	 * Returns a list of empty neighbours to the given point
+	 * @param t - the Point object
+	 * @return a list of empty neighbours to the point
+	 */
 	private ArrayList<Point> getEmptyNeighbours(Point t) {
 		ArrayList<Point> neighbours = new ArrayList<Point>();
 		int x = t.getRow();
@@ -206,26 +223,49 @@ public class State {
 		return neighbours;
 	}
 	
+	/**
+	 * 
+	 * @return the matrix representing this state
+	 */
 	public int[][] getStateMatrix() {
 		return stateMatrix;
 	}
 
+	/**
+	 * 
+	 * @return number of black pieces
+	 */
 	public int getNbrOfBlack() {
 		return sumOfBlack;
 	}
 	
+	/**
+	 * 
+	 * @return number of white pieces
+	 */
 	public int getNbrOfWhite() {
 		return sumOfWhite;
 	}
 	
+	/**
+	 * 
+	 * @return the row index of the last move
+	 */
 	public int getLastPlacedRow() {
 		return lastPlacedRow;
 	}
 	
+	/**
+	 * 
+	 * @return the column index of the last move
+	 */
 	public int getLastPlacedCol() {
 		return lastPlacedCol;
 	}
 	
+	/**
+	 * Updates the number of black and white pieces
+	 */
 	private void updateSum(){
 		int black = 0;
 		int white = 0;
@@ -242,6 +282,10 @@ public class State {
 		sumOfWhite = -white;
 	}
 	
+	/**
+	 * 
+	 * @return a copy of the matrix representation of this state
+	 */
 	private int[][] copyStateMatrix() {
 		int[][] copyMatrix = new int[8][8];
 		for(int i = 0; i < stateMatrix.length; i++) {

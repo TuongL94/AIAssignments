@@ -1,7 +1,12 @@
 
 public class Utilities {
 	
-	public static String translateNbrToLetter(int nbr) {
+	/**
+	 * Converts the numbers 0-7 to letters corresponding to the 1st-8th letters in the alphabet
+	 * @param nbr - the number
+	 * @return the corresponding letter
+	 */
+	public static String nbrToLetter(int nbr) {
 		String letter = "";
 		switch(nbr) {
 			case 0:
@@ -34,7 +39,12 @@ public class Utilities {
 		return letter;
 	}
 	
-	public static int translateLetterToNbr(String letter) {
+	/**
+	 * Converts the 1st-8th letters in the alphabet to the corresponding numbers 0-7.
+	 * @param letter - the letter
+	 * @return the corresponding number
+	 */
+	public static int letterToNbr(String letter) {
 		int nbr = -1;
 		switch(letter) {
 			case "a":

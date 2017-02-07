@@ -8,6 +8,8 @@ public class Game {
 
 	/**
 	 * Constructor
+	 * @param human - Player object representing the human player
+	 * @param bot - Player object representing the bot player
 	 */
 	public Game(Player human, Player bot) {
 		currentState = new State();
@@ -16,7 +18,13 @@ public class Game {
 		currentPlayer = this.human;
 	}
 	
-	public void updateGame() {
+	
+	/**
+	 * Sets the state of the game to a given new state and changes the current player
+	 * @param newState - State object representing the new state
+	 */
+	public void updateGame(State newState) {
+		currentState = newState;
 		if(currentPlayer.getId() == 1) {
 			currentPlayer = bot;
 		} else {
@@ -36,10 +44,18 @@ public class Game {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return the current player of the game
+	 */
 	public Player getCurrentPlayer(){
 		return currentPlayer;
 	}
 	
+	/**
+	 * 
+	 * @return a State object representing the current state of the game
+	 */
 	public State getGameState(){
 		return currentState;
 	}
