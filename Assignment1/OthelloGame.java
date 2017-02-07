@@ -7,9 +7,10 @@ public class OthelloGame {
 		Player human = new Player(1);
 		Player robot = new Player(-1);
 		Game othello = new Game(human, robot);
-		int depth = 10;
+		int depth = 3;
 		int[][] start = othello.getGameState().getStateMatrix();
 		long timeLimit = timeLimit(sc).longValue();
+		System.out.println("\n");
 		plotCurrentState(start);
 		System.out.print("\n");
 		Node rootNode = new Node(othello.getGameState());
@@ -22,9 +23,10 @@ public class OthelloGame {
 					rootNode = n;
 				}
 			}
-			createChildren(depth, p.getId(), rootNode);
+			createChildren(depth, -p.getId(), rootNode);
 			if(p.getId() == robot.getId()){
-				System.out.println(action.getRow()+", "+action.getCol());
+				System.out.print("\n");
+				System.out.println("The bot made the move: " + "(" + action.getRow( )+ "," + Utilities.translateNbrToLetter(action.getCol()) + ")");
 				System.out.print("\n");
 			}
 			plotCurrentState(rootNode.getNodeState().getStateMatrix());

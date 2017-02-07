@@ -17,20 +17,9 @@ public class Player {
 	
 	public Point chooseAction(Node n, int depth) {
 		if(identity == 1) {
-			return humanResponse();
+			return humanResponse(n.getNodeState());
 		} else {
 			Point p = miniMax(n, depth, -10^6, 10^6, false, 0);
-			State optimalState =  n.getChildren().get(p.getCol()).getNodeState();
-			Point optimalMove = new Point(optimalState.getLastPlacedRow(), optimalState.getLastPlacedCol());
-			return optimalMove;
-		}
-	}
-	
-	public Point chooseAction2(Node n, int depth) {
-		if(identity == 1) {
-			return humanResponse();
-		} else {
-			Point p = miniMax(n, depth, false, 0);
 			State optimalState =  n.getChildren().get(p.getCol()).getNodeState();
 			Point optimalMove = new Point(optimalState.getLastPlacedRow(), optimalState.getLastPlacedCol());
 			return optimalMove;
@@ -117,16 +106,19 @@ public class Player {
 		}
 	}
 	
-	private Point humanResponse(){
+	private Point humanResponse(State currentState){
+		ArrayList<Point> possibleMoves = possibleActions(currentState);
 		int row = 0;
-		int col = 0;
+		String col = "";
         Scanner sc = new Scanner(System.in);
-        System.out.println("Your move: ");
-        while(sc.hasNextInt()){
-        	row = sc.nextInt();
-        	col = sc.nextInt();
+        System.out.println("Possible moves: ");
+        for(int i = 0; i < possibleMoves.size(); i++) {
+        	System.out.println("(" + possibleMoves.get(i).getRow() + "," + Utilities.translateNbrToLetter(possibleMoves.get(i).getCol()) + ")");
         }
-        Point p = new Point(row,col);
+        System.out.println("Enter a move among the possible moves, starting with the row number and then the column letter: ");
+        	row = sc.nextInt();
+        	col = sc.next();
+        Point p = new Point(row,Utilities.translateLetterToNbr(col));
         return p;
 	}
 }
