@@ -9,7 +9,14 @@ public class OthelloGame {
 		Game othello = new Game(human, robot);
 		int depth = 3;
 		int[][] start = othello.getGameState().getStateMatrix();
-		long timeLimit = timeLimit(sc).longValue();
+		double timeLimit = timeLimit(sc);
+		if(timeLimit < 0.5){
+			depth = 3;
+		} else if(timeLimit < 1){
+			depth = 5;
+		} else {
+			depth = 6;
+		}
 		System.out.println("\n");
 		plotCurrentState(start);
 		System.out.print("\n");
@@ -37,7 +44,7 @@ public class OthelloGame {
 		int yourScore = othello.getGameState().getNbrOfBlack();
 		int botScore = othello.getGameState().getNbrOfWhite();
 		System.out.println("Your score: " + yourScore);
-		System.out.println("Bot's score " + botScore);
+		System.out.println("Bot's score " + -botScore);
 		if(yourScore + botScore > 0) {
 			System.out.println("You are victorious!");
 		} else if(yourScore + botScore < 0) {
@@ -73,10 +80,10 @@ public class OthelloGame {
 		}
 	}
 	
-	private static Integer timeLimit(Scanner sc){
-		Integer timeLimit = 10^6;
+	private static double timeLimit(Scanner sc){
+		double timeLimit = 10^6;
         System.out.println("Please enter the number of seconds the computer is allowed to think: ");
-        timeLimit = sc.nextInt();
+        timeLimit = sc.nextDouble();
         return timeLimit;
 	}
 	
