@@ -36,17 +36,6 @@ public class State {
 	}
 	
 	/**
-	 * Checks if the given position is empty
-	 * @param row, row index
-	 * @param col, column index
-	 * @return true if the position is empty, otherwise false
-	 */
-	public boolean isEmpty(int row, int col) {
-		return stateMatrix[row][col] == 0;
-	}
-	
-	
-	/**
 	 * Returns a copy of the updated state (the method does not update the state)
 	 */
 	public int[][] getUpdatedStateMatrix(Point a, int playerId) {
