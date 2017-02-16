@@ -31,6 +31,7 @@ hold on
 plot(grid, w_batch_eng(1)+w_batch_eng(2)*grid, 'r')
 plot(frData(:,1),frData(:,2),'x')
 plot(grid, w_batch_fr(1)+w_batch_fr(2)*grid, 'b')
+legend('English data', 'Fitted line to english data','French data','Fitted line to english data')
 
 %% Stochastic gradient descent
 
@@ -51,6 +52,7 @@ hold on
 plot(grid, w_stoch_eng(1)+w_stoch_eng(2)*grid, 'r')
 plot(frData(:,1),frData(:,2),'x')
 plot(grid, w_stoch_fr(1)+w_stoch_fr(2)*grid, 'b')
+legend('English data', 'Fitted line to english data','French data','Fitted line to english data')
 
 
 %% Perceptron
@@ -69,6 +71,7 @@ plot(grid, k_percep*grid+m_percep, 'g')
 hold on
 plot(engData(:,1),engData(:,2),'ro')
 plot(frData(:,1),frData(:,2),'bx')
+legend('English data', 'Fitted line to english data','French data','Fitted line to english data')
 
 %% Logistic regression
 
@@ -88,3 +91,4 @@ plot(grid, k_logistic*grid+m_logistic, 'g')
 hold on
 plot(engData(:,1),engData(:,2),'ro')
 plot(frData(:,1),frData(:,2),'bx')
+legend('English data', 'Fitted line to english data','French data','Fitted line to english data')
