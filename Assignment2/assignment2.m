@@ -1,100 +1,86 @@
+%% Loading data
+
+% Load the data to matlab-compatible formats
+[label, dataset] = libsvmread('encodedData.txt');
+dataset = full(dataset);
+% separate data according to classes
+engData = dataset(label == 1,:);
+frData = dataset(label == 0,:);
+% scale data
+dataset_scaled =  bsxfun(@rdivide, dataset, max(dataset));
+engData_scaled = bsxfun(@rdivide, engData, max(engData));
+frData_scaled = bsxfun(@rdivide, frData, max(frData));
+
 %% Batch gradient descent
 
-dataset1 = scaledEnglishData;
-dataset2 = scaledFrenchData;
+[scaled_w_batch_eng, engDataIterations_batch] = batchGradientDescent(engData_scaled);
+[scaled_w_batch_fr, frDataIterations_batch] = batchGradientDescent(frData_scaled);
 
-dataset3 = englishData;
-dataset4 = frenchData;
+w_batch_eng(1) = max(engData(:,2))*scaled_w_batch_eng(1);
+w_batch_eng(2) = max(engData(:,2))/max(engData(:,1))*scaled_w_batch_eng(2);
 
-[scaled_w1, nbr1] = batchGradientDescent(dataset1);
-[scaled_w2, nbr2] = batchGradientDescent(dataset2);
-
-w1(1) = max(dataset3(:,2))*scaled_w1(1);
-w1(2) = max(dataset3(:,2))/max(dataset3(:,1))*scaled_w1(2);
-
-w2(1) = max(dataset4(:,2))*scaled_w2(1);
-w2(2) = max(dataset4(:,2))/max(dataset4(:,1))*scaled_w2(2);
+w_batch_fr(1) = max(frData(:,2))*scaled_w_batch_fr(1);
+w_batch_fr(2) = max(frData(:,2))/max(frData(:,1))*scaled_w_batch_fr(2);
 
 grid = linspace(10000,80000,1000);
 
 figure(1)
-plot(dataset3(:,1),dataset3(:,2),'ro')
+plot(engData(:,1),engData(:,2),'ro')
 hold on
-plot(grid, w1(1)+w1(2)*grid, 'r')
-plot(dataset4(:,1),dataset4(:,2),'x')
-plot(grid, w2(1)+w2(2)*grid, 'b')
+plot(grid, w_batch_eng(1)+w_batch_eng(2)*grid, 'r')
+plot(frData(:,1),frData(:,2),'x')
+plot(grid, w_batch_fr(1)+w_batch_fr(2)*grid, 'b')
+
 %% Stochastic gradient descent
 
-dataset1 = scaledEnglishData;
-dataset2 = scaledFrenchData;
+[scaled_w_stoch_eng, engDataIterations_stoch] = stochasticGradientDescent(engData_scaled);
+[scaled_w_stoch_fr, frDataIterations_stoch] = stochasticGradientDescent(frData_scaled);
 
-dataset3 = englishData;
-dataset4 = frenchData;
+w_stoch_eng(1) = max(engData(:,2))*scaled_w_stoch_eng(1);
+w_stoch_eng(2) = max(engData(:,2))/max(engData(:,1))*scaled_w_stoch_eng(2);
 
-[scaled_w1, nbr1] = stochasticGradientDescent(dataset1);
-[scaled_w2, nbr2] = stochasticGradientDescent(dataset2);
-
-w1(1) = max(dataset3(:,2))*scaled_w1(1);
-w1(2) = max(dataset3(:,2))/max(dataset3(:,1))*scaled_w1(2);
-
-w2(1) = max(dataset4(:,2))*scaled_w2(1);
-w2(2) = max(dataset4(:,2))/max(dataset4(:,1))*scaled_w2(2);
+w_stoch_fr(1) = max(frData(:,2))*scaled_w_stoch_fr(1);
+w_stoch_fr(2) = max(frData(:,2))/max(frData(:,1))*scaled_w_stoch_fr(2);
 
 grid = linspace(10000,80000,1000);
 
 figure(1)
-plot(dataset3(:,1),dataset3(:,2),'ro')
+plot(engData(:,1),engData(:,2),'ro')
 hold on
-plot(grid, w1(1)+w1(2)*grid, 'r')
-plot(dataset4(:,1),dataset4(:,2),'x')
-plot(grid, w2(1)+w2(2)*grid, 'b')
+plot(grid, w_stoch_eng(1)+w_stoch_eng(2)*grid, 'r')
+plot(frData(:,1),frData(:,2),'x')
+plot(grid, w_stoch_fr(1)+w_stoch_fr(2)*grid, 'b')
 
 
 %% Perceptron
+[w_scaled_percep, iterations_percep] = myPerceptron(label, dataset_scaled);
 
-eng = englishData;
-fr = frenchData;
-dataset = [eng; fr];
-data = zeros(size(dataset,1), size(dataset,2));
-data(:,1) = dataset(:,1)/max(dataset(:,1));
-data(:,2) = dataset(:,2)/max(dataset(:,2));
+m_scaled_percep = -w_scaled_percep(1)/w_scaled_percep(3);
+k_scaled_percep = -w_scaled_percep(2)/w_scaled_percep(3);
 
-label = [ones(length(eng),1); zeros(length(fr),1)];
+m_percecp = max(dataset(:,2))*m_scaled;
+k_percep = max(dataset(:,2))/max(dataset(:,1))*k_scaled;
 
-w_scaled = myPerceptron(label,data);
-m_scaled = -w_scaled(1)/w_scaled(3);
-k_scaled = -w_scaled(2)/w_scaled(3);
-
-m = max(dataset(:,2))*m_scaled;
-k = max(dataset(:,2))/max(dataset(:,1))*k_scaled;
 grid = linspace(10000,80000,70000);
 
-plot(grid, k*grid+m, 'r')
+plot(grid, k_percep*grid+m_percep, 'g')
 hold on
-plot(eng(:,1),eng(:,2),'ro')
-plot(fr(:,1),fr(:,2),'bx')
+plot(engData(:,1),engData(:,2),'ro')
+plot(frData(:,1),frData(:,2),'bx')
 
 %% Logistic regression
 
-eng = englishData;
-fr = frenchData;
-dataset = [eng; fr];
-data = zeros(size(dataset,1), size(dataset,2));
-data(:,1) = dataset(:,1)/max(dataset(:,1));
-data(:,2) = dataset(:,2)/max(dataset(:,2));
+[w_scaled_logistic, iterations_logistic] = batchGradientAscent(label, dataset_scaled);
 
-label = [ones(length(eng),1); zeros(length(fr),1)];
+m_scaled_logistic = -w_scaled_logistic(1)/w_scaled_logistic(3);
+k_scaled_logistic = -w_scaled_logistic(2)/w_scaled_logistic(3);
 
-[w_scaled, iterations] = batchGradientAscent(data,label);
+m_logistic = max(dataset(:,2))*m_scaled;
+k_logistic = max(dataset(:,2))/max(dataset(:,1))*k_scaled;
 
-m_scaled = -w_scaled(1)/w_scaled(3);
-k_scaled = -w_scaled(2)/w_scaled(3);
-
-m = max(dataset(:,2))*m_scaled;
-k = max(dataset(:,2))/max(dataset(:,1))*k_scaled;
 grid = linspace(10000,80000,70000);
 
-plot(grid, k*grid+m, 'r')
+plot(grid, k_logistic*grid+m_logistic, 'g')
 hold on
-plot(eng(:,1),eng(:,2),'ro')
-plot(fr(:,1),fr(:,2),'bx')
+plot(engData(:,1),engData(:,2),'ro')
+plot(frData(:,1),frData(:,2),'bx')

@@ -1,4 +1,4 @@
-function [w,nbrOfIterations] = batchGradientAscent(data,label)
+function [w,nbrOfIterations] = batchGradientAscent(label, data)
 dataset = [ones(length(data),1) data];
 nbrOfIterations = 0;
 q = length(dataset(:,1));
