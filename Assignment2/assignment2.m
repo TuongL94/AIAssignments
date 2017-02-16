@@ -71,7 +71,7 @@ plot(grid, k_percep*grid+m_percep, 'g')
 hold on
 plot(engData(:,1),engData(:,2),'ro')
 plot(frData(:,1),frData(:,2),'bx')
-legend('English data', 'Fitted line to english data','French data','Fitted line to english data')
+legend('Decision line', 'English data','French data')
 
 %% Logistic regression
 
@@ -91,4 +91,4 @@ plot(grid, k_logistic*grid+m_logistic, 'g')
 hold on
 plot(engData(:,1),engData(:,2),'ro')
 plot(frData(:,1),frData(:,2),'bx')
-legend('English data', 'Fitted line to english data','French data','Fitted line to english data')
+legend('Decision line', 'English data','French data')
