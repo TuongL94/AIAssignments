@@ -9,10 +9,10 @@ import java.nio.file.*;
 
 public class dataReader {
 	
-	public static void main(String args[]){
+	public static void encodeData(String dataFile, String encodedDataFile) {
 		Charset charset = Charset.forName("US-ASCII");
-		Path path = FileSystems.getDefault().getPath("","test.txt");
-		Path newPath = FileSystems.getDefault().getPath("","svm.txt");
+		Path path = FileSystems.getDefault().getPath("",dataFile);
+		Path newPath = FileSystems.getDefault().getPath("",encodedDataFile);
 		File f = new File(newPath.getFileName().toString());
 		BufferedWriter writer = null;
 		try {
@@ -33,7 +33,6 @@ public class dataReader {
 	
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
@@ -46,28 +45,11 @@ public class dataReader {
 				
 			}
 		}
-
-
-		
-		
-		
-//		String workingdir = System.getProperty("user.dir");
-//		System.out.println(workingdir);
-		
-//		try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
-//			String line = null;
-//			while ((line = reader.readLine()) != null) {
-//				String[] splitStr = line.split("\\s+");
-//				for(int i = 0; i < splitStr.length; i++) {
-//					writer.write(splitStr[i]);
-//				}
-//			}
-//		} catch (IOException x) {
-//			System.err.format("IOException: %s%n", x);
-//		}
-
-		
-		
 	}
-
+	
+	public static void main(String args[]){
+		String data = "rawData.txt";
+		String encodedData = "encodedData.txt";
+		encodeData(data,encodedData);
+	}
 }
