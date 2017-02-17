@@ -3,8 +3,8 @@ dataset = [ones(length(data),1) data];
 nbrOfIterations = 0;
 q = length(dataset(:,1));
 epsilon = 0.01;
-alpha = 6;
-w0 = [-1 200 -200]';
+alpha = 20;
+w0 = [1 1 1]';
 
 grad_term = @(w,x,y,z) x.*(y - (1./(1+exp(-w*z)))');
 grad0 = @(w) sum(grad_term(w,dataset(:,1),label,dataset'));
