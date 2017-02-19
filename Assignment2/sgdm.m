@@ -12,21 +12,14 @@ wold = [1;1];
 w = [2;2];
 
 random_indices = randperm(size(dataset,1))';
-shuffled_dataset = zeros(size(dataset,1),size(dataset,2));
-for i = 1:size(dataset,2)
-    temp = dataset(:,i);
-    shuffled_dataset(:,i) = temp(random_indices);
-end
+shuffled_dataset = [dataset(random_indices,1) dataset(random_indices,2)];
 
 k = 1;
 while norm(w-wold)/norm(w) > epsilon
     if k > size(dataset,1)
         k = 1;
         random_indices = randperm(size(dataset,1))';
-        for i = 1:size(dataset,2)
-            temp = dataset(:,i);
-            shuffled_dataset(:,i) = temp(random_indices);
-        end
+        shuffled_dataset = [dataset(random_indices,1) dataset(random_indices,2)];
     end
     wtemp = w;
     w = w + alpha*update(w, shuffled_dataset(k,1), shuffled_dataset(k,2)) + gamma*(w-wold);
