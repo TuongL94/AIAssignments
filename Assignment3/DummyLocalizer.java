@@ -1,17 +1,19 @@
 package model;
 
-
+import java.util.*;
 import control.EstimatorInterface;
 
 public class DummyLocalizer implements EstimatorInterface {
 		
 	private int rows, cols, head;
 	private double [][] transitionMatrix = new double [64][64];
+	private Robot bot;
 
 	public DummyLocalizer( int rows, int cols, int head) {
 		this.rows = rows;
 		this.cols = cols;
 		this.head = head;
+		bot = new Robot();
 		createTransitionMatrix();
 	}	
 	
@@ -39,14 +41,26 @@ public class DummyLocalizer implements EstimatorInterface {
 
 
 	public int[] getCurrentTruePosition() {
-		int[] ret = new int[2];
-		ret[0] = rows/2;
-		ret[1] = cols/2;
-		return ret;
+		return bot.getPosition();
 	}
 
 	public int[] getCurrentReading() {
-		int[] ret = null;
+		int[] ret;
+		int[] truePos = bot.getPosition();
+		ArrayList<int[]> neighbours = Utilities.getNeighbours(bot.getPosition());
+		ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(bot.getPosition());
+		double r = Math.random();
+		if(r < 0.1) {
+			ret = truePos;
+		} else if(r >= 0.1 && r < 0.1 + neighbours.size()*0.05) {
+			Random rand = new Random();
+			ret = neighbours.get(rand.nextInt(neighbours.size()));
+		} else if(r >= 0.1 + neighbours.size()*0.05 && r < 0.1 + neighbours.size()*0.05 + secondNeighbours.size()*0.025) {
+			Random rand = new Random();
+			ret = neighbours.get(rand.nextInt(secondNeighbours.size()));
+		} else {
+			ret = null;
+		}
 		return ret;
 	}
 
