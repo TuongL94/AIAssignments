@@ -14,6 +14,7 @@ public class Robot {
 		int row = randomizer.nextInt(4);
 		int col = randomizer.nextInt(4);
 		heading = randomizer.nextInt(4);
+		pos = new int[2];
 		pos[0] = row;
 		pos[1] = col;
 	}

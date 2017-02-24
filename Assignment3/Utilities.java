@@ -39,8 +39,6 @@ public class Utilities {
 		return foundWall;
 	}
 	
-	
-	
 	public static ArrayList<int[]> getNeighbours(int[] position) {
 		ArrayList<int[]> neighbours = new ArrayList<int[]>();
 		for(int i = -1; i <= 1; i++) {
@@ -82,6 +80,14 @@ public class Utilities {
 			}
 		}
 		return feasibleHeadings;
+	}
+	
+	public static int[] stateToCoord(int state) {
+		int[] coord = new int[2];
+		int square = state/4;
+		coord[0] = square/4;
+		coord[1] = square%4;
+		return coord;
 	}
 	
 	public static int toState(int[] pos, int heading){

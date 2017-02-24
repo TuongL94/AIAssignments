@@ -7,6 +7,7 @@ public class DummyLocalizer implements EstimatorInterface {
 		
 	private int rows, cols, head;
 	private double [][] transitionMatrix = new double [64][64];
+	private double [][] observationMatrix = new double[64][64];
 	private Robot bot;
 
 	public DummyLocalizer( int rows, int cols, int head) {
@@ -77,8 +78,8 @@ public class DummyLocalizer implements EstimatorInterface {
 	private void createTransitionMatrix() {
 		for(int i = 0; i < transitionMatrix.length; i++) {
 			for(int j = 0; j < transitionMatrix.length; j++) {
-				int[] row_coord = getCoord(i);
-				int[] col_coord = getCoord(j);
+				int[] row_coord = Utilities.stateToCoord(i);
+				int[] col_coord = Utilities.stateToCoord(j);
 				int row_heading = i % 4;
 				int col_heading = j % 4;
 				if(Math.abs(row_coord[0]-col_coord[0]) > 1 || Math.abs(row_coord[1]-col_coord[1]) > 1 ||
@@ -114,32 +115,56 @@ public class DummyLocalizer implements EstimatorInterface {
 		}
 	}
 	
-
-	private int[] getCoord(int state) {
-		int[] coord = new int[2];
-		int square = state/4;
-		coord[0] = square/4;
-		coord[1] = square%4;
-		return coord;
-	}
-	
 	public double[][] getObservationMatrix(int[] observedLocation){
 		double[][] observationMatrix = new double[64][64];
 		ArrayList<int[]> neighbours = Utilities.getNeighbours(observedLocation);
 		for(int[]neighbour : neighbours){
 			for(int i = 0; i < 4; i++){
-				observationMatrix[Utilities.toState(neighbour,i)][Utilities.toState(neighbour,i)] = 0.05/4.0;
+				observationMatrix[Utilities.toState(neighbour,i)][Utilities.toState(neighbour,i)] = 0.05;
 			}
 		}
 		ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(observedLocation);
 		for(int[]secondNeighbour : secondNeighbours){
 			for(int i = 0; i < 4; i++){
-				observationMatrix[Utilities.toState(secondNeighbour,i)][Utilities.toState(secondNeighbour,i)] = 0.025/4.0;
+				observationMatrix[Utilities.toState(secondNeighbour,i)][Utilities.toState(secondNeighbour,i)] = 0.025;
 			}
 		}
 		for(int i = 0; i < 4; i++){
-			observationMatrix[Utilities.toState(observedLocation,i)][Utilities.toState(observedLocation,i)] = 0.1/4.0;
+			observationMatrix[Utilities.toState(observedLocation,i)][Utilities.toState(observedLocation,i)] = 0.1;
 		}
 		return observationMatrix;
 	}
+	
+//	private void createSensorMatrix() {
+//		int[] currentReading = getCurrentReading();
+//		for(int i = 0; i < transitionMatrix.length; i++) {
+//			int[] stateCoord = Utilities.stateToCoord(i);
+//			ArrayList<int[]> neighbours = Utilities.getNeighbours(stateCoord);
+//			ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(stateCoord);
+//			if(currentReading != null) {
+//				if(stateCoord[0] == currentReading[0] && stateCoord[1] == currentReading[1]) {
+//					observationMatrix[i][i] = 0.1;
+//				} else {
+//					for(int[] n : neighbours) {
+//						if(currentReading[0] == n[0] && currentReading[1] == n[1]) {
+//							observationMatrix[i][i] = 0.05;
+//							break;
+//						}
+//					}
+//					if(observationMatrix[i][i] == 0) {
+//						for(int[] n : secondNeighbours) {
+//							if(currentReading[0] == n[0] && currentReading[1] == n[1]) {
+//								observationMatrix[i][i] = 0.05;
+//								break;
+//							}
+//						}
+//					} else {
+//						continue;
+//					}
+//				}
+//			} else {
+//				
+//			}
+//		}
+//	}	
 }
