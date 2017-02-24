@@ -1,25 +1,26 @@
 package model;
 
 import java.util.*;
+
+import Jama.Matrix;
 import control.EstimatorInterface;
 
 public class DummyLocalizer implements EstimatorInterface {
 		
 	private int rows, cols, head;
-	private double [][] transitionMatrix = new double [64][64];
-	private double [][] observationMatrix = new double[64][64];
-	private double[] posterior = new double[63];
+	private Matrix transitionMatrix;
+	private Matrix posterior;
 	private Robot bot;
+	private int[] sensorReading;
 
 	public DummyLocalizer( int rows, int cols, int head) {
 		this.rows = rows;
 		this.cols = cols;
 		this.head = head;
 		bot = new Robot();
-		createTransitionMatrix();
-		for(int i = 0; i < posterior.length; i++) {
-			posterior[i] = 1.0/64.0;
-		}
+		transitionMatrix = createTransitionMatrix();
+		posterior = new Matrix(64,1,1.0/64.0);
+		sensorReading = new int[2];
 	}	
 	
 	public int getNumRows() {
@@ -37,23 +38,30 @@ public class DummyLocalizer implements EstimatorInterface {
 	public double getTProb( int x, int y, int h, int nX, int nY, int nH) {
 		int currentState = 4*(y+4*x)+h;
 		int newState = 4*(nY+4*nX)+nH;
-		return transitionMatrix[currentState][newState];
+		return transitionMatrix.get(currentState, newState);
 	}
 
 	public double getOrXY( int rX, int rY, int x, int y) {
-		int[] observedLocation = {rX,rY};
-		double[][] oMatrix = getObservationMatrix(observedLocation);
-		int[] pos = {x,y};
-		int state = Utilities.toState(pos,0);
-		return oMatrix[state][state];
+		if(rX == -1 || rY == -1){
+			int[] pos = {x,y};
+			ArrayList<int[]> neighbours = Utilities.getNeighbours(pos);
+			ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(pos);
+			return 1.0-0.1-neighbours.size()*0.05-secondNeighbours.size()*0.025;
+		} else{
+			int[] observedLocation = {rX,rY};
+			Matrix oMatrix = getObservationMatrix(observedLocation);
+			int[] pos = {x,y};
+			int state = Utilities.toState(pos,0);
+			return oMatrix.get(state, state);
+		}
 	}
 
 
 	public int[] getCurrentTruePosition() {
 		return bot.getPosition();
 	}
-
-	public int[] getCurrentReading() {
+	
+	private void newReading(){
 		int[] ret;
 		int[] truePos = bot.getPosition();
 		ArrayList<int[]> neighbours = Utilities.getNeighbours(bot.getPosition());
@@ -68,23 +76,40 @@ public class DummyLocalizer implements EstimatorInterface {
 			Random rand = new Random();
 			ret = neighbours.get(rand.nextInt(secondNeighbours.size()));
 		} else {
-			ret = null;
+			ret = new int[2];
+			ret[0] = -1;
+			ret[1] = -1;
 		}
-		return ret;
+		sensorReading = ret;
+	}
+
+	public int[] getCurrentReading() {
+		return sensorReading;
 	}
 
 
 	public double getCurrentProb( int x, int y) {
-		double ret = 0.0;
-		return ret;
+		double prob = 0;
+		int[] pos = {x,y};
+		for(int i = 0; i < 4; i++){
+			int state = Utilities.toState(pos,i);
+			prob = prob + posterior.get(state,0);
+		}
+		return prob;
 	}
 	
 	public void update() {
-		
-		System.out.println("Nothing is happening, no model to go for...");
+		bot.walk();
+		newReading();
+		Matrix obs = getObservationMatrix(sensorReading);
+		Matrix postUnscaled = obs.times(transitionMatrix.transpose()).times(posterior);
+		Matrix ones = new Matrix(64,1,1);
+		double alpha = 1.0/(postUnscaled.transpose().times(ones)).get(0, 0);
+		posterior = postUnscaled.times(alpha);
 	}
 	
-	private void createTransitionMatrix() {
+	private Matrix createTransitionMatrix() {
+		double[][] transitionMatrix = new double[64][64];
 		for(int i = 0; i < transitionMatrix.length; i++) {
 			for(int j = 0; j < transitionMatrix.length; j++) {
 				int[] row_coord = Utilities.stateToCoord(i);
@@ -122,9 +147,10 @@ public class DummyLocalizer implements EstimatorInterface {
 				
 			}
 		}
+		return new Matrix(transitionMatrix);
 	}
 	
-	public double[][] getObservationMatrix(int[] observedLocation){
+	public Matrix getObservationMatrix(int[] observedLocation){
 		double[][] observationMatrix = new double[64][64];
 		ArrayList<int[]> neighbours = Utilities.getNeighbours(observedLocation);
 		for(int[]neighbour : neighbours){
@@ -141,7 +167,7 @@ public class DummyLocalizer implements EstimatorInterface {
 		for(int i = 0; i < 4; i++){
 			observationMatrix[Utilities.toState(observedLocation,i)][Utilities.toState(observedLocation,i)] = 0.1;
 		}
-		return observationMatrix;
+		return new Matrix(observationMatrix);
 	}
 	
 	
