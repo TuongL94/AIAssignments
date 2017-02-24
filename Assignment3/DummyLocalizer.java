@@ -37,7 +37,11 @@ public class DummyLocalizer implements EstimatorInterface {
 	}
 
 	public double getOrXY( int rX, int rY, int x, int y) {
-		return 0.1;
+		int[] observedLocation = {rX,rY};
+		double[][] oMatrix = getObservationMatrix(observedLocation);
+		int[] pos = {x,y};
+		int state = Utilities.toState(pos,0);
+		return oMatrix[state][state];
 	}
 
 
