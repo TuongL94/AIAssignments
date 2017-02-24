@@ -1,5 +1,6 @@
 package model;
 
+
 import control.EstimatorInterface;
 
 public class DummyLocalizer implements EstimatorInterface {
@@ -38,12 +39,10 @@ public class DummyLocalizer implements EstimatorInterface {
 
 
 	public int[] getCurrentTruePosition() {
-		
 		int[] ret = new int[2];
 		ret[0] = rows/2;
 		ret[1] = cols/2;
 		return ret;
-
 	}
 
 	public int[] getCurrentReading() {
@@ -74,17 +73,17 @@ public class DummyLocalizer implements EstimatorInterface {
 				} else {
 					if((row_coord[0]-col_coord[0] > 0 && col_heading == 0) || (row_coord[0]-col_coord[0] < 0 && col_heading == 2)
 							|| (row_coord[1]-col_coord[1] < 0 && col_heading == 1) || (row_coord[1]-col_coord[1] > 0 && col_heading == 3)){
-						if(wall(row_coord[0],row_coord[1],row_heading) && isCorner(row_coord)) {
+						if(Utilities.wall(row_coord[0],row_coord[1],row_heading) && Utilities.isCorner(row_coord)) {
 							transitionMatrix[i][j] = 0.5;
-						} else if (wall(row_coord[0],row_coord[1],row_heading)){
+						} else if (Utilities.wall(row_coord[0],row_coord[1],row_heading)){
 							transitionMatrix[i][j] = 1.0/3.0;
 						} else {
 							if(row_heading == col_heading){
 								transitionMatrix[i][j] = 0.7;
 							} else {
-								if(isCorner(row_coord)){
+								if(Utilities.isCorner(row_coord)){
 									transitionMatrix[i][j] = 0.3;
-								} else if(isWall(row_coord)) {
+								} else if(Utilities.isWall(row_coord)) {
 									transitionMatrix[i][j] = 0.3*0.5;
 								} else{
 									transitionMatrix[i][j] = 0.3/3.0;
@@ -102,10 +101,6 @@ public class DummyLocalizer implements EstimatorInterface {
 	}
 	
 
-	private boolean isCorner(int[] coord) {
-		return((coord[0]==0 && coord[1]==0) || (coord[0]==0 && coord[1]==3) || (coord[0]==3 && coord[1]==0) || (coord[0]==3 && coord[1]==3));
-	}
-
 	private int[] getCoord(int state) {
 		int[] coord = new int[2];
 		int square = state/4;
@@ -113,37 +108,4 @@ public class DummyLocalizer implements EstimatorInterface {
 		coord[1] = square%4;
 		return coord;
 	}
-
-	private boolean wall(int x, int y, int h) {
-		boolean foundWall = false;
-		switch(h) {
-		case 0:
-			if(x-1 < 0) {
-				foundWall = true;
-			}
-			break;
-		case 1:
-			if(y+1 > transitionMatrix.length ) {
-				foundWall = true;
-			}
-			break;
-		case 2:
-			if(x+1 > transitionMatrix.length) {
-				foundWall = true;
-			}
-			break;
-		case 3:
-			if(y-1 < 0) {
-				foundWall = true;
-			}
-			break;
-		}
-		return foundWall;
-
-	}
-	
-	private boolean isWall(int[] coord) {
-		return (coord[0] == 0 || coord[0] == transitionMatrix.length || coord[1] == 0 || coord[1] == transitionMatrix.length);
-	}
-		
 }
