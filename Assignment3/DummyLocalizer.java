@@ -8,6 +8,7 @@ public class DummyLocalizer implements EstimatorInterface {
 	private int rows, cols, head;
 	private double [][] transitionMatrix = new double [64][64];
 	private double [][] observationMatrix = new double[64][64];
+	private double[] posterior = new double[63];
 	private Robot bot;
 
 	public DummyLocalizer( int rows, int cols, int head) {
@@ -16,6 +17,9 @@ public class DummyLocalizer implements EstimatorInterface {
 		this.head = head;
 		bot = new Robot();
 		createTransitionMatrix();
+		for(int i = 0; i < posterior.length; i++) {
+			posterior[i] = 1.0/64.0;
+		}
 	}	
 	
 	public int getNumRows() {
@@ -76,6 +80,7 @@ public class DummyLocalizer implements EstimatorInterface {
 	}
 	
 	public void update() {
+		
 		System.out.println("Nothing is happening, no model to go for...");
 	}
 	
@@ -138,6 +143,7 @@ public class DummyLocalizer implements EstimatorInterface {
 		}
 		return observationMatrix;
 	}
+	
 	
 //	private void createSensorMatrix() {
 //		int[] currentReading = getCurrentReading();
