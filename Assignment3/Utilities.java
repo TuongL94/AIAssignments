@@ -83,4 +83,8 @@ public class Utilities {
 		}
 		return feasibleHeadings;
 	}
+	
+	public static int toState(int[] pos, int heading){
+		return 16*pos[0]+4*pos[1]+heading;
+	}
 }
