@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Utilities {
 
 	public static boolean isWall(int[] coord) {
@@ -37,6 +39,41 @@ public class Utilities {
 		return foundWall;
 	}
 	
+	
+	
+	public static ArrayList<int[]> getNeighbours(int[] position) {
+		ArrayList<int[]> neighbours = new ArrayList<int[]>();
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				int[] potentialNeighbour = {position[0] + i, position[1] + j};
+				if(!outsideGrid(potentialNeighbour) && (potentialNeighbour[0] != position[0] ||  potentialNeighbour[1] != position[1])) {
+					neighbours.add(potentialNeighbour);
+				}
+			}
+		}
+		return neighbours;
+	}
+	
+	public static ArrayList<int[]> getSecondNeighbours(int[] position) {
+		ArrayList<int[]> secondNeighbours = new ArrayList<int[]>();
+		for(int i = -2; i <= 2; i++) {
+			for(int j = -2; j <= 2 ; j++) {
+				int[] potentialSecondNeighbour = {position[0] + i, position[1] + j};
+				if((potentialSecondNeighbour[0] == position[0] - 2 || potentialSecondNeighbour[0] == position[0] + 2 ||
+						potentialSecondNeighbour[1] == position[1] - 2 || potentialSecondNeighbour[1] == position[1] + 2)
+						&& !outsideGrid(potentialSecondNeighbour) && (potentialSecondNeighbour[0] != position[0] || 
+						potentialSecondNeighbour[1] != position[1]) ) {
+					secondNeighbours.add(potentialSecondNeighbour);
+				}
+			}
+		}
+		return secondNeighbours;
+	}
+	
+	public static boolean outsideGrid(int[] position) {
+		return position[0] < 0 || position[0] >3 || position[1] < 0 || position[1] > 3; 
+	}
+	
 	public static ArrayList<Integer> getFeasibleHeadings(int[] pos){
 		ArrayList<Integer> feasibleHeadings = new ArrayList<Integer>();
 		for(int i = 0; i < 4; i++) {
@@ -46,5 +83,4 @@ public class Utilities {
 		}
 		return feasibleHeadings;
 	}
-
 }
