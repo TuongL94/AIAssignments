@@ -11,7 +11,7 @@ public class DummyLocalizer implements EstimatorInterface {
 		this.rows = rows;
 		this.cols = cols;
 		this.head = head;
-		//createTransitionMatrix();
+		createTransitionMatrix();
 	}	
 	
 	public int getNumRows() {
@@ -72,8 +72,8 @@ public class DummyLocalizer implements EstimatorInterface {
 						((row_coord[0] != col_coord[0]) &&  (row_coord[1] != col_coord[1]))){
 					transitionMatrix[i][j] = 0;
 				} else {
-					if((row_coord[0]-col_coord[0] < 0 && col_heading == 1) || (row_coord[0]-col_coord[0] > 0 && col_heading == 3)
-							|| (row_coord[1]-col_coord[1] < 0 && col_heading == 0) || (row_coord[1]-col_coord[1] > 0 && col_heading == 2)){
+					if((row_coord[0]-col_coord[0] > 0 && col_heading == 0) || (row_coord[0]-col_coord[0] < 0 && col_heading == 2)
+							|| (row_coord[1]-col_coord[1] < 0 && col_heading == 1) || (row_coord[1]-col_coord[1] > 0 && col_heading == 3)){
 						if(wall(row_coord[0],row_coord[1],row_heading) && isCorner(row_coord)) {
 							transitionMatrix[i][j] = 0.5;
 						} else if (wall(row_coord[0],row_coord[1],row_heading)){
@@ -82,7 +82,14 @@ public class DummyLocalizer implements EstimatorInterface {
 							if(row_heading == col_heading){
 								transitionMatrix[i][j] = 0.7;
 							} else {
-								transitionMatrix[i][j] = 0.3/3.0;
+								if(isCorner(row_coord)){
+									transitionMatrix[i][j] = 0.3;
+								} else if(isWall(row_coord)) {
+									transitionMatrix[i][j] = 0.3*0.5;
+								} else{
+									transitionMatrix[i][j] = 0.3/3.0;
+								}
+								
 							}
 						}
 					} else {
@@ -99,10 +106,11 @@ public class DummyLocalizer implements EstimatorInterface {
 		return((coord[0]==0 && coord[1]==0) || (coord[0]==0 && coord[1]==3) || (coord[0]==3 && coord[1]==0) || (coord[0]==3 && coord[1]==3));
 	}
 
-	private int[] getCoord(int j) {
+	private int[] getCoord(int state) {
 		int[] coord = new int[2];
-		coord[1] = j%4;
-		coord[0] = (int) Math.floor(((float) j/4 - coord[1])/4);
+		int square = state/4;
+		coord[0] = square/4;
+		coord[1] = square%4;
 		return coord;
 	}
 
@@ -110,22 +118,22 @@ public class DummyLocalizer implements EstimatorInterface {
 		boolean foundWall = false;
 		switch(h) {
 		case 0:
-			if(x+1 > transitionMatrix.length) {
-				foundWall = true;
-			}
-			break;
-		case 1:
-			if(y-1 < 0) {
-				foundWall = true;
-			}
-			break;
-		case 2:
 			if(x-1 < 0) {
 				foundWall = true;
 			}
 			break;
+		case 1:
+			if(y+1 > transitionMatrix.length ) {
+				foundWall = true;
+			}
+			break;
+		case 2:
+			if(x+1 > transitionMatrix.length) {
+				foundWall = true;
+			}
+			break;
 		case 3:
-			if(y+1 > transitionMatrix.length) {
+			if(y-1 < 0) {
 				foundWall = true;
 			}
 			break;
@@ -134,5 +142,8 @@ public class DummyLocalizer implements EstimatorInterface {
 
 	}
 	
-	
+	private boolean isWall(int[] coord) {
+		return (coord[0] == 0 || coord[0] == transitionMatrix.length || coord[1] == 0 || coord[1] == transitionMatrix.length);
+	}
+		
 }
