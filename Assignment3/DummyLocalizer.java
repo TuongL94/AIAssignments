@@ -122,4 +122,24 @@ public class DummyLocalizer implements EstimatorInterface {
 		coord[1] = square%4;
 		return coord;
 	}
+	
+	public double[][] getObservationMatrix(int[] observedLocation){
+		double[][] observationMatrix = new double[64][64];
+		ArrayList<int[]> neighbours = Utilities.getNeighbours(observedLocation);
+		for(int[]neighbour : neighbours){
+			for(int i = 0; i < 4; i++){
+				observationMatrix[Utilities.toState(neighbour,i)][Utilities.toState(neighbour,i)] = 0.05/4.0;
+			}
+		}
+		ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(observedLocation);
+		for(int[]secondNeighbour : secondNeighbours){
+			for(int i = 0; i < 4; i++){
+				observationMatrix[Utilities.toState(secondNeighbour,i)][Utilities.toState(secondNeighbour,i)] = 0.025/4.0;
+			}
+		}
+		for(int i = 0; i < 4; i++){
+			observationMatrix[Utilities.toState(observedLocation,i)][Utilities.toState(observedLocation,i)] = 0.1/4.0;
+		}
+		return observationMatrix;
+	}
 }
