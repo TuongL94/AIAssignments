@@ -36,5 +36,15 @@ public class Utilities {
 		}
 		return foundWall;
 	}
+	
+	public static ArrayList<Integer> getFeasibleHeadings(int[] pos){
+		ArrayList<Integer> feasibleHeadings = new ArrayList<Integer>();
+		for(int i = 0; i < 4; i++) {
+			if(!wall(pos[0],pos[1],i)){
+				feasibleHeadings.add(i);
+			}
+		}
+		return feasibleHeadings;
+	}
 
 }
