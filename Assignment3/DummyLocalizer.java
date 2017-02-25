@@ -13,6 +13,9 @@ public class DummyLocalizer implements EstimatorInterface {
 	private Robot bot;
 	private int[] sensorReading;
 
+	/*
+	 * Constructor
+	 */
 	public DummyLocalizer( int rows, int cols, int head) {
 		this.rows = rows;
 		this.cols = cols;
@@ -47,7 +50,7 @@ public class DummyLocalizer implements EstimatorInterface {
 			ArrayList<int[]> neighbours = Utilities.getNeighbours(pos);
 			ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(pos);
 			return 1.0-0.1-neighbours.size()*0.05-secondNeighbours.size()*0.025;
-		} else{
+		} else {
 			int[] observedLocation = {rX,rY};
 			Matrix oMatrix = getObservationMatrix(observedLocation);
 			int[] pos = {x,y};
@@ -56,37 +59,13 @@ public class DummyLocalizer implements EstimatorInterface {
 		}
 	}
 
-
 	public int[] getCurrentTruePosition() {
 		return bot.getPosition();
 	}
 	
-	private void newReading(){
-		int[] ret;
-		int[] truePos = bot.getPosition();
-		ArrayList<int[]> neighbours = Utilities.getNeighbours(bot.getPosition());
-		ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(bot.getPosition());
-		double r = Math.random();
-		if(r < 0.1) {
-			ret = truePos;
-		} else if(r >= 0.1 && r < 0.1 + neighbours.size()*0.05) {
-			Random rand = new Random();
-			ret = neighbours.get(rand.nextInt(neighbours.size()));
-		} else if(r >= 0.1 + neighbours.size()*0.05 && r < 0.1 + neighbours.size()*0.05 + secondNeighbours.size()*0.025) {
-			Random rand = new Random();
-			ret = neighbours.get(rand.nextInt(secondNeighbours.size()));
-		} else {
-			ret = new int[2];
-			ret[0] = -1;
-			ret[1] = -1;
-		}
-		sensorReading = ret;
-	}
-
 	public int[] getCurrentReading() {
 		return sensorReading;
 	}
-
 
 	public double getCurrentProb( int x, int y) {
 		double prob = 0;
@@ -108,6 +87,33 @@ public class DummyLocalizer implements EstimatorInterface {
 		posterior = postUnscaled.times(alpha);
 	}
 	
+	/*
+	 * Updates the sensor reading based on the robot's location and the probabilities given
+	 * in the assignment
+	 */
+	private void newReading(){
+		int[] ret;
+		int[] truePos = bot.getPosition();
+		ArrayList<int[]> neighbours = Utilities.getNeighbours(bot.getPosition());
+		ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(bot.getPosition());
+		double r = Math.random();
+		if(r < 0.1) {
+			ret = truePos;
+		} else if(r >= 0.1 && r < 0.1 + neighbours.size()*0.05) {
+			Random rand = new Random();
+			ret = neighbours.get(rand.nextInt(neighbours.size()));
+		} else if(r >= 0.1 + neighbours.size()*0.05 && r < 0.1 + neighbours.size()*0.05 + secondNeighbours.size()*0.025) {
+			Random rand = new Random();
+			ret = secondNeighbours.get(rand.nextInt(secondNeighbours.size()));
+		} else {
+			ret = null;
+		}
+		sensorReading = ret;
+	}
+	
+	/*
+	 * Creates and returns the transition matrix
+	 */
 	private Matrix createTransitionMatrix() {
 		double[][] transitionMatrix = new double[64][64];
 		for(int i = 0; i < transitionMatrix.length; i++) {
@@ -150,57 +156,35 @@ public class DummyLocalizer implements EstimatorInterface {
 		return new Matrix(transitionMatrix);
 	}
 	
-	public Matrix getObservationMatrix(int[] observedLocation){
+	/*
+	 * Creates and returns the observation/sensor matrix based on the current sensor reading
+	 */
+	private Matrix getObservationMatrix(int[] observedLocation){
 		double[][] observationMatrix = new double[64][64];
-		ArrayList<int[]> neighbours = Utilities.getNeighbours(observedLocation);
-		for(int[]neighbour : neighbours){
-			for(int i = 0; i < 4; i++){
-				observationMatrix[Utilities.toState(neighbour,i)][Utilities.toState(neighbour,i)] = 0.05;
+		if(observedLocation == null) {
+			for(int i = 0; i < transitionMatrix.getRowDimension(); i++) {
+				int[] currentPos = Utilities.stateToCoord(i);
+				ArrayList<int[]> neighbours = Utilities.getNeighbours(currentPos);
+				ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(currentPos);
+				observationMatrix[i][i] = 1.0-0.1-neighbours.size()*0.05-secondNeighbours.size()*0.025;
 			}
-		}
-		ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(observedLocation);
-		for(int[]secondNeighbour : secondNeighbours){
-			for(int i = 0; i < 4; i++){
-				observationMatrix[Utilities.toState(secondNeighbour,i)][Utilities.toState(secondNeighbour,i)] = 0.025;
+		} else {
+			ArrayList<int[]> neighbours = Utilities.getNeighbours(observedLocation);
+			for(int[]neighbour : neighbours){
+				for(int i = 0; i < 4; i++){
+					observationMatrix[Utilities.toState(neighbour,i)][Utilities.toState(neighbour,i)] = 0.05;
+				}
 			}
-		}
-		for(int i = 0; i < 4; i++){
-			observationMatrix[Utilities.toState(observedLocation,i)][Utilities.toState(observedLocation,i)] = 0.1;
+			ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(observedLocation);
+			for(int[]secondNeighbour : secondNeighbours){
+				for(int i = 0; i < 4; i++){
+					observationMatrix[Utilities.toState(secondNeighbour,i)][Utilities.toState(secondNeighbour,i)] = 0.025;
+				}
+			}
+			for(int i = 0; i < 4; i++){
+				observationMatrix[Utilities.toState(observedLocation,i)][Utilities.toState(observedLocation,i)] = 0.1;
+			}
 		}
 		return new Matrix(observationMatrix);
-	}
-	
-	
-//	private void createSensorMatrix() {
-//		int[] currentReading = getCurrentReading();
-//		for(int i = 0; i < transitionMatrix.length; i++) {
-//			int[] stateCoord = Utilities.stateToCoord(i);
-//			ArrayList<int[]> neighbours = Utilities.getNeighbours(stateCoord);
-//			ArrayList<int[]> secondNeighbours = Utilities.getSecondNeighbours(stateCoord);
-//			if(currentReading != null) {
-//				if(stateCoord[0] == currentReading[0] && stateCoord[1] == currentReading[1]) {
-//					observationMatrix[i][i] = 0.1;
-//				} else {
-//					for(int[] n : neighbours) {
-//						if(currentReading[0] == n[0] && currentReading[1] == n[1]) {
-//							observationMatrix[i][i] = 0.05;
-//							break;
-//						}
-//					}
-//					if(observationMatrix[i][i] == 0) {
-//						for(int[] n : secondNeighbours) {
-//							if(currentReading[0] == n[0] && currentReading[1] == n[1]) {
-//								observationMatrix[i][i] = 0.05;
-//								break;
-//							}
-//						}
-//					} else {
-//						continue;
-//					}
-//				}
-//			} else {
-//				
-//			}
-//		}
-//	}	
+	}		
 }

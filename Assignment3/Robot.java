@@ -9,6 +9,9 @@ public class Robot {
 	private int heading;
 	Random randomizer;
 	
+	/*
+	 * Constructor
+	 */
 	public Robot(){
 		randomizer = new Random();
 		int row = randomizer.nextInt(4);
@@ -19,29 +22,33 @@ public class Robot {
 		pos[1] = col;
 	}
 	
+	/*
+	 * Returns the current position of the robot
+	 */
 	public int[] getPosition(){
 		return pos;
 	}
 	
+	/*
+	 * The robot moves in a heading determined by the move strategy of the robot
+	 */
 	public void walk(){
+		ArrayList<Integer> feasibleHeadings = Utilities.getFeasibleHeadings(pos);
 		if(Utilities.wall(pos[0], pos[1], heading)){
-				ArrayList<Integer> feasibleHeadings = Utilities.getFeasibleHeadings(pos);
 				heading = feasibleHeadings.get(randomizer.nextInt(feasibleHeadings.size()));
-				step();
 		} else {
 			if(randomizer.nextDouble() > 0.7){
-				ArrayList<Integer> feasibleHeadings = Utilities.getFeasibleHeadings(pos);
 				int newHeading = heading;
 				while(newHeading == heading){
 					newHeading = feasibleHeadings.get(randomizer.nextInt(feasibleHeadings.size()));
 				}
 				heading = newHeading;
 			}
-			step();
 		}
-		
+		step();
 	}
 
+	
 	private void step() {
 		if(heading == 0){
 			pos[0] = pos[0] - 1;
@@ -53,5 +60,4 @@ public class Robot {
 			pos[1] = pos[1] - 1;
 		}
 	}
-
 }
