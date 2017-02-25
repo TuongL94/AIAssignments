@@ -7,15 +7,19 @@ public class Robot {
 	
 	private int[] pos;
 	private int heading;
+	private int rows;
+	private int cols;
 	Random randomizer;
 	
 	/*
 	 * Constructor
 	 */
-	public Robot(){
+	public Robot(int rows, int cols){
 		randomizer = new Random();
-		int row = randomizer.nextInt(4);
-		int col = randomizer.nextInt(4);
+		this.rows = rows;
+		this.cols = cols;
+		int row = randomizer.nextInt(rows);
+		int col = randomizer.nextInt(cols);
 		heading = randomizer.nextInt(4);
 		pos = new int[2];
 		pos[0] = row;
@@ -33,8 +37,8 @@ public class Robot {
 	 * The robot moves in a heading determined by the move strategy of the robot
 	 */
 	public void walk(){
-		ArrayList<Integer> feasibleHeadings = Utilities.getFeasibleHeadings(pos);
-		if(Utilities.wall(pos[0], pos[1], heading)){
+		ArrayList<Integer> feasibleHeadings = Utilities.getFeasibleHeadings(pos, rows, cols);
+		if(Utilities.wall(pos[0], pos[1], heading, rows, cols)){
 				heading = feasibleHeadings.get(randomizer.nextInt(feasibleHeadings.size()));
 		} else {
 			if(randomizer.nextDouble() > 0.7){
@@ -48,7 +52,6 @@ public class Robot {
 		step();
 	}
 
-	
 	private void step() {
 		if(heading == 0){
 			pos[0] = pos[0] - 1;
