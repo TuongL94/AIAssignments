@@ -128,4 +128,8 @@ public class Utilities {
 	public static int toState(int[] pos, int heading, int cols){
 		return 4*(pos[1] + cols*pos[0])+heading;
 	}
+	
+	public static int manhattanDistance(int[] v1, int[] v2) {
+		return Math.abs(v1[0] - v2[0]) + Math.abs(v1[1] - v2[1]);
+	}
 }
