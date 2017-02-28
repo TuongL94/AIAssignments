@@ -117,10 +117,16 @@ public class Player {
         for(int i = 0; i < possibleMoves.size(); i++) {
         	System.out.println("(" + String.valueOf(possibleMoves.get(i).getRow() + 1) + "," + Utilities.nbrToLetter(possibleMoves.get(i).getCol()) + ")");
         }
-        System.out.println("Enter a move among the possible moves, starting with the row number and then the column letter: ");
-        	row = sc.nextInt();
-        	col = sc.next();
+        System.out.println("Enter a move among the possible moves, start with the row number (1-8) and press enter \nand then the column letter (a-h) and press enter: ");
+        row = sc.nextInt();
+        col = sc.next();
         Point p = new Point(row - 1,Utilities.letterToNbr(col));
+        while(!possibleMoves.contains(p)){
+        	System.out.println("The move you entered is not a legal move, pick one of the moves in the list above!");
+            row = sc.nextInt();
+            col = sc.next();
+            p = new Point(row - 1,Utilities.letterToNbr(col));
+        }
         return p;
 	}
 }
