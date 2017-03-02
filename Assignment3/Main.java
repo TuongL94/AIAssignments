@@ -28,12 +28,5 @@ public class Main {
 		 * you can only click through your localisation stepwise
 		 */
 		new LocalizationDriver( 500, viewer).start();
-		while(!viewer.getStopFlag()) {
-			
-		}
-			ArrayList<Integer> locErrors = viewer.getLocErrors();
-			Graph g = new Graph(locErrors);
-			g.setVisible(true);
-		}
-		
+		}	
 	}
