@@ -16,10 +16,7 @@ import control.*;
 
 
 public class RobotLocalizationViewer {
-	
-	private ArrayList<Integer> locError;
-	private boolean stopFlag;
-	
+		
 	private JFrame viewer;
 	private JTextField[][][] states;
 	private JPanel[][] positions;
@@ -30,8 +27,6 @@ public class RobotLocalizationViewer {
 	
 	public RobotLocalizationViewer( EstimatorInterface l) {
 		loc = l;
-		this.locError = new ArrayList<Integer>();
-		this.stopFlag = false;
 		this.rows = loc.getNumRows();
 		this.cols = loc.getNumCols();
 		this.head = loc.getNumHead();
@@ -103,8 +98,6 @@ public class RobotLocalizationViewer {
 		stopButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e) {
 				setRunFlag( false);
-				stopFlag = true;
-				viewer.setVisible(false);
 			}
 		});
 
@@ -229,9 +222,6 @@ public class RobotLocalizationViewer {
 		states[tX][tY][4].setBackground(Color.black);
 		if( sX != -1)
 			states[sX][sY][4].setBackground(Color.cyan);
-		int[] maxProbSquare = {maxX,maxY};
-		int[] truePos = {tX,tY};
-		locError.add(Utilities.manhattanDistance(maxProbSquare,truePos));
 	}
 
 	public void updateTransitionView() {
@@ -297,13 +287,5 @@ public class RobotLocalizationViewer {
 			}
 		}
 				
-	}
-	
-	public ArrayList<Integer> getLocErrors() {
-		return locError;
-	}
-	
-	public boolean getStopFlag() {
-		return stopFlag;
 	}
 }
