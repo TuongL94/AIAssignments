@@ -1,6 +1,6 @@
 package control;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.swing.SwingUtilities;
 
@@ -14,12 +14,16 @@ public class Main {
 	 */
 	
 	public static void main( String[] args) {
-		
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter the desired number of rows for the grid, then press ENTER");
+		int rows = scan.nextInt();
+		System.out.println("Enter the desired number of columns for the grid, then press ENTER");
+		int cols = scan.nextInt();
 		/*
 		 * generate you own localiser / estimator wrapper here to plug it into the 
 		 * graphics class.
 		 */
-		EstimatorInterface l = new DummyLocalizer(4, 4, 4);
+		EstimatorInterface l = new DummyLocalizer(rows, cols, 4);
 
 		RobotLocalizationViewer viewer = new RobotLocalizationViewer( l);
 
